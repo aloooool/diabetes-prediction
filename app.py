@@ -1,3 +1,5 @@
+import joblib
+import pandas as pd
 import streamlit as st
 import random
 import time
@@ -8,14 +10,18 @@ st.set_page_config(
     page_icon="🩺",
     layout="centered"
 )
+@st.cache_resource
+def load_model():
+    return joblib.load('diabetes_model.pkl')
 
+model = load_model()
 
 # 3. Modular Prediction Function
 def predict_diabetes(features: dict) -> int:
-    """Simulates a machine learning inference step."""
-    #all model logic import from other file
-    # When ready, replace this with: return model.predict(pd.DataFrame([features]))[0]
-    return random.choice([0, 1])
+    """Runs machine learning inference."""
+    input_df = pd.DataFrame([features])
+    prediction = model.predict(input_df)
+    return int(prediction[0])
 
 # 4. Main Application Application
 def main():
